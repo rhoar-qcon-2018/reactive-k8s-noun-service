@@ -361,7 +361,7 @@ test('test PUT noun - error - id error', t => {
     });
 });
 
-test('test PUT fruit - not found', t => {
+test('test PUT noun - not found', t => {
   const nounData = {
     noun_text: 'Banana',
     id: '20'
@@ -393,10 +393,9 @@ test('test PUT fruit - not found', t => {
     });
 });
 
-test('test PUT fruit - error', t => {
+test('test PUT noun - error', t => {
   const nounData = {
     noun_text: 'Banana',
-    stock: 10,
     id: '22'
   };
 
@@ -417,7 +416,7 @@ test('test PUT fruit - error', t => {
   });
 
   supertest(app)
-    .put('/api/fruits/22')
+    .put('/api/nouns/22')
     .send(nounData)
     .expect(400)
     .then(() => {
@@ -425,13 +424,13 @@ test('test PUT fruit - error', t => {
     });
 });
 
-test('test PUT fruit - error - no payload', t => {
+test('test PUT noun - error - no payload', t => {
   const app = proxyquire('../app', {
     './lib/db': mockDb
   });
 
   supertest(app)
-    .put('/api/fruits/20')
+    .put('/api/nouns/20')
     .expect(415)
     .then(response => {
       t.equal(response.text, 'Invalid payload!', 'Payload must be set');
@@ -445,7 +444,7 @@ test('test PUT fruit - error - invalid payload', t => {
   });
 
   supertest(app)
-    .put('/api/fruits/20')
+    .put('/api/nouns/20')
     .set('Content-Type', 'application/json')
     .send('Some text')
     .expect(415)
@@ -461,7 +460,7 @@ test('test PUT fruit - error - xml payload', t => {
   });
   const xmlnounData = '<?xml version="1.0" encoding="UTF-8"?><fruit><noun_text>Banana</noun_text><stock>10</stock></fruit>';
   supertest(app)
-    .put('/api/fruits/10')
+    .put('/api/nouns/10')
     .set('Content-Type', 'application/xml')
     .send(xmlnounData)
     .expect(415)
@@ -477,7 +476,7 @@ test('test PUT fruit - error - JSON Content-Type and XML body', t => {
   });
   const xmlnounData = '<?xml version="1.0" encoding="UTF-8"?><fruit><noun_text>adam</noun_text><stock>10</stock></fruit>';
   supertest(app)
-    .put('/api/fruits/10')
+    .put('/api/nouns/10')
     .set('Content-Type', 'application/json')
     .send(xmlnounData)
     .expect(415)
@@ -498,7 +497,7 @@ test('test PUT fruit - error - no numeric stock', t => {
   });
 
   supertest(app)
-    .put('/api/fruits/10')
+    .put('/api/nouns/10')
     .send(nounData)
     .expect(422)
     .then(response => {
@@ -517,7 +516,7 @@ test('test DELETE fruit', t => {
 
   // Mock the nested require
   const routesStub = proxyquire('../lib/routes/nouns', {
-    '../api/fruits': mockApi
+    '../api/nouns': mockApi
   });
 
   const app = proxyquire('../app', {
@@ -526,7 +525,7 @@ test('test DELETE fruit', t => {
   });
 
   supertest(app)
-    .delete('/api/fruits/1')
+    .delete('/api/nouns/1')
     .expect(204)
     .then(() => {
       t.end();
@@ -542,7 +541,7 @@ test('test DELETE fruit - error - not found', t => {
 
   // Mock the nested require
   const routesStub = proxyquire('../lib/routes/nouns', {
-    '../api/fruits': mockApi
+    '../api/nouns': mockApi
   });
 
   const app = proxyquire('../app', {
@@ -551,7 +550,7 @@ test('test DELETE fruit - error - not found', t => {
   });
 
   supertest(app)
-    .delete('/api/fruits/1')
+    .delete('/api/nouns/1')
     .expect(404)
     .then(response => {
       t.equal(response.text, 'Unknown item 1', 'has unkown error text');
@@ -568,7 +567,7 @@ test('test DELETE fruit - error', t => {
 
   // Mock the nested require
   const routesStub = proxyquire('../lib/routes/nouns', {
-    '../api/fruits': mockApi
+    '../api/nouns': mockApi
   });
 
   const app = proxyquire('../app', {
@@ -577,7 +576,7 @@ test('test DELETE fruit - error', t => {
   });
 
   supertest(app)
-    .delete('/api/fruits/1')
+    .delete('/api/nouns/1')
     .expect(400)
     .then(() => {
       t.end();

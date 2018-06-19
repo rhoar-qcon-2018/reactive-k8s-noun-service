@@ -16,10 +16,10 @@ testEnvironment.deploy()
 
 function runTests (route) {
   // GET fruits
-  test('/api/fruits', t => {
+  test('/api/nouns', t => {
     t.plan(2);
     supertest(route)
-      .get('/api/fruits')
+      .get('/api/nouns')
       .expect(200)
       .expect('Content-Type', /json/)
       .then(response => {
@@ -33,7 +33,7 @@ function runTests (route) {
   test('/api/fruit/:id', t => {
     t.plan(4);
     supertest(route)
-      .get('/api/fruits/1')
+      .get('/api/nouns/1')
       .expect(200)
       .expect('Content-Type', /json/)
       .then(response => {
@@ -49,7 +49,7 @@ function runTests (route) {
   test('/api/fruit/:id - does not exist', t => {
     t.plan(1);
     supertest(route)
-      .get('/api/fruits/10')
+      .get('/api/nouns/10')
       .expect(404)
       .expect('Content-Type', /text/)
       .then(response => {
@@ -67,7 +67,7 @@ function runTests (route) {
     };
 
     supertest(route)
-      .post('/api/fruits')
+      .post('/api/nouns')
       .send(nounData)
       .expect(201)
       .expect('Content-Type', /json/)
@@ -78,7 +78,7 @@ function runTests (route) {
         t.equal(response.body.stock, nounData.stock, `stock is ${nounData.stock}`);
 
         // Clean up
-        supertest(route).delete(`/api/fruits/${response.body.id}`).then(_ => ({}));
+        supertest(route).delete(`/api/nouns/${response.body.id}`).then(_ => ({}));
         t.end();
       });
   });
@@ -88,7 +88,7 @@ function runTests (route) {
     const nounData = '{name: \'Banana\', stock: \'10\'}';
 
     supertest(route)
-      .post('/api/fruits')
+      .post('/api/nouns')
       .send(nounData)
       .expect(422)
       .then(() => {
@@ -106,7 +106,7 @@ function runTests (route) {
 
     // First create the new fruit
     supertest(route)
-      .post('/api/fruits')
+      .post('/api/nouns')
       .send(nounData)
       .expect(201)
       .then(response => {
@@ -118,13 +118,13 @@ function runTests (route) {
         };
 
         supertest(route)
-          .put(`/api/fruits/${id}`)
+          .put(`/api/nouns/${id}`)
           .send(updatedFruit)
           .expect(204)
           .then(() => {
             // Clean up
             t.pass('should return with an empty response');
-            supertest(route).delete(`/api/fruits/${response.body.id}`).then(_ => ({}));
+            supertest(route).delete(`/api/nouns/${response.body.id}`).then(_ => ({}));
             t.end();
           });
       });
