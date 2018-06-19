@@ -36,13 +36,13 @@ test('test find', t => {
 });
 
 test('test create', t => {
-  const result = fruits.create('name', 'stock');
+  const result = fruits.create('noun_text', 'stock');
   t.equal(result instanceof Promise, true, 'should return a promise');
   t.end();
 });
 
 test('test update', t => {
-  const result = fruits.update({name: 'name', stock: 'stock', id: 1});
+  const result = fruits.update({noun_text: 'noun_text', stock: 'stock', id: 1});
   t.equal(result instanceof Promise, true, 'should return a promise');
   t.end();
 });

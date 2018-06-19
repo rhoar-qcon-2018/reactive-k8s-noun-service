@@ -10,23 +10,24 @@ const mockDb = {
   }
 };
 
-test('test GET all fruits', t => {
+// #1
+test('test GET all nouns', t => {
   const mockApi = {
     findAll: () => Promise.resolve({rows: [{id: 1}]})
   };
 
   // Mock the nested require
-  const routesStub = proxyquire('../lib/routes/fruits', {
-    '../api/fruits': mockApi
+  const routesStub = proxyquire('../lib/routes/nouns', {
+    '../api/nouns': mockApi
   });
 
   const app = proxyquire('../app', {
     './lib/db': mockDb,
-    './lib/routes/fruits': routesStub
+    './lib/routes/nouns': routesStub
   });
 
   supertest(app)
-    .get('/api/fruits')
+    .get('/api/nouns')
     .expect('Content-Type', /json/)
     .expect(200)
     .then(response => {
@@ -36,30 +37,30 @@ test('test GET all fruits', t => {
     });
 });
 
-test('test GET all fruits - error', t => {
+test('test GET all nouns - error', t => {
   const mockApi = {
     findAll: () => Promise.reject(new Error('error'))
   };
 
   // Mock the nested require
-  const routesStub = proxyquire('../lib/routes/fruits', {
-    '../api/fruits': mockApi
+  const routesStub = proxyquire('../lib/routes/nouns', {
+    '../api/nouns': mockApi
   });
 
   const app = proxyquire('../app', {
     './lib/db': mockDb,
-    './lib/routes/fruits': routesStub
+    './lib/routes/nouns': routesStub
   });
 
   supertest(app)
-    .get('/api/fruits')
+    .get('/api/nouns')
     .expect(400)
     .then(() => {
       t.end();
     });
 });
 
-test('test GET fruit', t => {
+test('test GET noun', t => {
   const mockApi = {
     find: id => {
       t.equal(id, '1', 'id should be 1 from the request params');
@@ -68,17 +69,17 @@ test('test GET fruit', t => {
   };
 
   // Mock the nested require
-  const routesStub = proxyquire('../lib/routes/fruits', {
-    '../api/fruits': mockApi
+  const routesStub = proxyquire('../lib/routes/nouns', {
+    '../api/nouns': mockApi
   });
 
   const app = proxyquire('../app', {
     './lib/db': mockDb,
-    './lib/routes/fruits': routesStub
+    './lib/routes/nouns': routesStub
   });
 
   supertest(app)
-    .get('/api/fruits/1')
+    .get('/api/nouns/1')
     .expect('Content-Type', /json/)
     .expect(200)
     .then(response => {
@@ -88,89 +89,86 @@ test('test GET fruit', t => {
     });
 });
 
-test('test GET fruit - return 404', t => {
+test('test GET noun - return 404', t => {
   const mockApi = {
     find: () => Promise.resolve({rowCount: 0})
   };
 
   // Mock the nested require
-  const routesStub = proxyquire('../lib/routes/fruits', {
-    '../api/fruits': mockApi
+  const routesStub = proxyquire('../lib/routes/nouns', {
+    '../api/nouns': mockApi
   });
 
   const app = proxyquire('../app', {
     './lib/db': mockDb,
-    './lib/routes/fruits': routesStub
+    './lib/routes/nouns': routesStub
   });
 
   supertest(app)
-    .get('/api/fruits/1')
+    .get('/api/nouns/1')
     .expect(404)
     .then(response => {
-      t.equal(response.text, 'Item 1 not found', 'shhould have a message about not found id');
+      t.equal(response.text, 'Item 1 not found', 'should have a message about not found id');
       t.end();
     });
 });
 
-test('test GET fruit - error', t => {
+test('test GET noun - error', t => {
   const mockApi = {
     find: () => Promise.reject(new Error('error'))
   };
 
   // Mock the nested require
-  const routesStub = proxyquire('../lib/routes/fruits', {
-    '../api/fruits': mockApi
+  const routesStub = proxyquire('../lib/routes/nouns', {
+    '../api/nouns': mockApi
   });
 
   const app = proxyquire('../app', {
     './lib/db': mockDb,
-    './lib/routes/fruits': routesStub
+    './lib/routes/nouns': routesStub
   });
 
   supertest(app)
-    .get('/api/fruits/1')
+    .get('/api/nouns/1')
     .expect(400)
     .then(() => {
       t.end();
     });
 });
 
-test('test POST fruit', t => {
-  const fruitData = {
-    name: 'Banana',
-    stock: 10
+test('test POST noun', t => {
+  const nounData = {
+    noun_text: 'Banana'
   };
 
   const mockApi = {
-    create: (name, stock) => {
-      t.equal(name, fruitData.name, `respone.body.name should be ${fruitData.name}`);
-      t.equal(stock, fruitData.stock, `respone.body.stock should be ${fruitData.stock}`);
+    create: (noun_text) => {
+      t.equal(noun_text, nounData.noun_text, `respone.body.noun_text should be ${nounData.noun_text}`);
       return Promise.resolve({rows: []});
     }
   };
 
   // Mock the nested require
-  const routesStub = proxyquire('../lib/routes/fruits', {
-    '../api/fruits': mockApi
+  const routesStub = proxyquire('../lib/routes/nouns', {
+    '../api/nouns': mockApi
   });
 
   const app = proxyquire('../app', {
     './lib/db': mockDb,
-    './lib/routes/fruits': routesStub
+    './lib/routes/nouns': routesStub
   });
 
   supertest(app)
-    .post('/api/fruits')
-    .send(fruitData)
+    .post('/api/nouns')
+    .send(nounData)
     .expect(201)
     .then(() => {
       t.end();
     });
 });
 
-test('test POST fruit - error - no name', t => {
-  const fruitData = {
-    stock: 10
+test('test POST noun - error - no noun_text', t => {
+  const nounData = {
   };
 
   const app = proxyquire('../app', {
@@ -178,30 +176,11 @@ test('test POST fruit - error - no name', t => {
   });
 
   supertest(app)
-    .post('/api/fruits')
-    .send(fruitData)
+    .post('/api/nouns')
+    .send(nounData)
     .expect(422)
     .then(response => {
-      t.equal(response.text, 'The name is required!', 'has a need name message');
-      t.end();
-    });
-});
-
-test('test POST fruit - error - no stock', t => {
-  const fruitData = {
-    name: 'Banana'
-  };
-
-  const app = proxyquire('../app', {
-    './lib/db': mockDb
-  });
-
-  supertest(app)
-    .post('/api/fruits')
-    .send(fruitData)
-    .expect(422)
-    .then(response => {
-      t.equal(response.text, 'The stock must be greater or equal to 0!', 'has a need stock message');
+      t.equal(response.text, 'The noun_text is required!', 'has a need noun_text message');
       t.end();
     });
 });
@@ -212,8 +191,8 @@ test('test POST fruit - error - id error', t => {
   });
 
   supertest(app)
-    .post('/api/fruits')
-    .send({name: 'Banana', stock: 10, id: 22})
+    .post('/api/nouns')
+    .send({noun_text: 'Banana', stock: 10, id: 22})
     .expect(422)
     .then(response => {
       t.equal(response.text, 'Id was invalidly set on request.', 'has an id error message');
@@ -221,9 +200,9 @@ test('test POST fruit - error - id error', t => {
     });
 });
 
-test('test POST fruit - error', t => {
-  const fruitData = {
-    name: 'Banana',
+test('test POST noun - error', t => {
+  const nounData = {
+    noun_text: 'Banana',
     stock: 10
   };
 
@@ -234,31 +213,31 @@ test('test POST fruit - error', t => {
   };
 
   // Mock the nested require
-  const routesStub = proxyquire('../lib/routes/fruits', {
-    '../api/fruits': mockApi
+  const routesStub = proxyquire('../lib/routes/nouns', {
+    '../api/nouns': mockApi
   });
 
   const app = proxyquire('../app', {
     './lib/db': mockDb,
-    './lib/routes/fruits': routesStub
+    './lib/routes/nouns': routesStub
   });
 
   supertest(app)
-    .post('/api/fruits')
-    .send(fruitData)
+    .post('/api/nouns')
+    .send(nounData)
     .expect(400)
     .then(() => {
       t.end();
     });
 });
 
-test('test POST fruit - error - no payload', t => {
+test('test POST noun - error - no payload', t => {
   const app = proxyquire('../app', {
     './lib/db': mockDb
   });
 
   supertest(app)
-    .post('/api/fruits')
+    .post('/api/noun')
     .expect(415)
     .then(response => {
       t.equal(response.text, 'Invalid payload!', 'Payload must be set');
@@ -266,13 +245,13 @@ test('test POST fruit - error - no payload', t => {
     });
 });
 
-test('test POST fruit - error - invalid payload', t => {
+test('test POST noun - error - invalid payload', t => {
   const app = proxyquire('../app', {
     './lib/db': mockDb
   });
 
   supertest(app)
-    .post('/api/fruits')
+    .post('/api/nouns')
     .set('Content-Type', 'application/json')
     .send('Some text')
     .expect(415)
@@ -286,11 +265,11 @@ test('test POST fruit - error - xml payload', t => {
   const app = proxyquire('../app', {
     './lib/db': mockDb
   });
-  const xmlFruitData = '<?xml version="1.0" encoding="UTF-8"?><fruit><name>Banana</name><stock>10</stock></fruit>';
+  const xmlnounData = '<?xml version="1.0" encoding="UTF-8"?><fruit><noun_text>Banana</noun_text><stock>10</stock></fruit>';
   supertest(app)
-    .post('/api/fruits')
+    .post('/api/nouns')
     .set('Content-Type', 'application/xml')
-    .send(xmlFruitData)
+    .send(xmlnounData)
     .expect(415)
     .then(response => {
       t.equal(response.text, 'Invalid payload!', 'Payload must be in JSON format');
@@ -302,11 +281,11 @@ test('test POST fruit - error - JSON Content-Type and XML body', t => {
   const app = proxyquire('../app', {
     './lib/db': mockDb
   });
-  const xmlFruitData = '<?xml version="1.0" encoding="UTF-8"?><fruit><name>adam</name><stock>10</stock></fruit>';
+  const xmlnounData = '<?xml version="1.0" encoding="UTF-8"?><fruit><noun_text>adam</noun_text><stock>10</stock></fruit>';
   supertest(app)
-    .post('/api/fruits')
+    .post('/api/nouns')
     .set('Content-Type', 'application/json')
-    .send(xmlFruitData)
+    .send(xmlnounData)
     .expect(415)
     .then(response => {
       t.equal(response.text, 'Invalid payload!', 'Payload must be in JSON format');
@@ -315,8 +294,8 @@ test('test POST fruit - error - JSON Content-Type and XML body', t => {
 });
 
 test('test POST fruit - error - negative number of stock', t => {
-  const fruitData = {
-    name: 'Banana',
+  const nounData = {
+    noun_text: 'Banana',
     stock: -10
   };
 
@@ -325,8 +304,8 @@ test('test POST fruit - error - negative number of stock', t => {
   });
 
   supertest(app)
-    .post('/api/fruits')
-    .send(fruitData)
+    .post('/api/nouns')
+    .send(nounData)
     .expect(422)
     .then(response => {
       t.equal(response.text, 'The stock must be greater or equal to 0!', 'has a need stock message');
@@ -335,8 +314,8 @@ test('test POST fruit - error - negative number of stock', t => {
 });
 
 test('test POST fruit - error - no numeric stock', t => {
-  const fruitData = {
-    name: 'Banana',
+  const nounData = {
+    noun_text: 'Banana',
     stock: 'two'
   };
 
@@ -345,8 +324,8 @@ test('test POST fruit - error - no numeric stock', t => {
   });
 
   supertest(app)
-    .post('/api/fruits')
-    .send(fruitData)
+    .post('/api/nouns')
+    .send(nounData)
     .expect(422)
     .then(response => {
       t.equal(response.text, 'The stock must be greater or equal to 0!', 'has a need stock message');
@@ -355,42 +334,42 @@ test('test POST fruit - error - no numeric stock', t => {
 });
 
 test('test PUT fruit', t => {
-  const fruitData = {
-    name: 'Banana',
+  const nounData = {
+    noun_text: 'Banana',
     stock: 10,
     id: '20'
   };
 
   const mockApi = {
     update: options => {
-      t.equal(options.name, fruitData.name, `respone.body.name should be ${fruitData.name}`);
-      t.equal(options.stock, fruitData.stock, `respone.body.stock should be ${fruitData.stock}`);
-      t.equal(options.id, fruitData.id, `respone.body.id should be ${fruitData.stock}`);
+      t.equal(options.noun_text, nounData.noun_text, `respone.body.noun_text should be ${nounData.noun_text}`);
+      t.equal(options.stock, nounData.stock, `respone.body.stock should be ${nounData.stock}`);
+      t.equal(options.id, nounData.id, `respone.body.id should be ${nounData.stock}`);
       return Promise.resolve({rowCount: 1});
     }
   };
 
   // Mock the nested require
-  const routesStub = proxyquire('../lib/routes/fruits', {
-    '../api/fruits': mockApi
+  const routesStub = proxyquire('../lib/routes/nouns', {
+    '../api/nouns': mockApi
   });
 
   const app = proxyquire('../app', {
     './lib/db': mockDb,
-    './lib/routes/fruits': routesStub
+    './lib/routes/nouns': routesStub
   });
 
   supertest(app)
-    .put('/api/fruits/20')
-    .send(fruitData)
+    .put('/api/nouns/20')
+    .send(nounData)
     .expect(204)
     .then(() => {
       t.end();
     });
 });
 
-test('test PUT fruit - error - no name', t => {
-  const fruitData = {
+test('test PUT fruit - error - no noun_text', t => {
+  const nounData = {
     stock: 10
   };
 
@@ -399,11 +378,11 @@ test('test PUT fruit - error - no name', t => {
   });
 
   supertest(app)
-    .put('/api/fruits/20')
+    .put('/api/nouns/20')
     .expect(422)
-    .send(fruitData)
+    .send(nounData)
     .then(response => {
-      t.equal(response.text, 'The name is required!', 'has a need name message');
+      t.equal(response.text, 'The noun_text is required!', 'has a need noun_text message');
       t.end();
     });
 });
@@ -414,8 +393,8 @@ test('test PUT fruit - error - no stock', t => {
   });
 
   supertest(app)
-    .put('/api/fruits/20')
-    .send({name: 'name'})
+    .put('/api/nouns/20')
+    .send({noun_text: 'noun_text'})
     .expect(422)
     .then(response => {
       t.equal(response.text, 'The stock must be greater or equal to 0!', 'has a need stock message');
@@ -429,8 +408,8 @@ test('test PUT fruit - error - id error', t => {
   });
 
   supertest(app)
-    .put('/api/fruits/20')
-    .send({name: 'Banana', stock: 10, id: '22'})
+    .put('/api/nouns/20')
+    .send({noun_text: 'Banana', stock: 10, id: '22'})
     .expect(422)
     .then(response => {
       t.equal(response.text, 'Id was invalidly set on request.', 'id error message');
@@ -439,8 +418,8 @@ test('test PUT fruit - error - id error', t => {
 });
 
 test('test PUT fruit - not found', t => {
-  const fruitData = {
-    name: 'Banana',
+  const nounData = {
+    noun_text: 'Banana',
     stock: 10,
     id: '20'
   };
@@ -452,18 +431,18 @@ test('test PUT fruit - not found', t => {
   };
 
   // Mock the nested require
-  const routesStub = proxyquire('../lib/routes/fruits', {
-    '../api/fruits': mockApi
+  const routesStub = proxyquire('../lib/routes/nouns', {
+    '../api/nouns': mockApi
   });
 
   const app = proxyquire('../app', {
     './lib/db': mockDb,
-    './lib/routes/fruits': routesStub
+    './lib/routes/nouns': routesStub
   });
 
   supertest(app)
-    .put('/api/fruits/20')
-    .send(fruitData)
+    .put('/api/nouns/20')
+    .send(nounData)
     .expect(404)
     .then(response => {
       t.equal(response.text, 'Unknown item 20', 'has unknown update error');
@@ -472,8 +451,8 @@ test('test PUT fruit - not found', t => {
 });
 
 test('test PUT fruit - error', t => {
-  const fruitData = {
-    name: 'Banana',
+  const nounData = {
+    noun_text: 'Banana',
     stock: 10,
     id: '22'
   };
@@ -485,18 +464,18 @@ test('test PUT fruit - error', t => {
   };
 
   // Mock the nested require
-  const routesStub = proxyquire('../lib/routes/fruits', {
-    '../api/fruits': mockApi
+  const routesStub = proxyquire('../lib/routes/nouns', {
+    '../api/nouns': mockApi
   });
 
   const app = proxyquire('../app', {
     './lib/db': mockDb,
-    './lib/routes/fruits': routesStub
+    './lib/routes/nouns': routesStub
   });
 
   supertest(app)
     .put('/api/fruits/22')
-    .send(fruitData)
+    .send(nounData)
     .expect(400)
     .then(() => {
       t.end();
@@ -537,11 +516,11 @@ test('test PUT fruit - error - xml payload', t => {
   const app = proxyquire('../app', {
     './lib/db': mockDb
   });
-  const xmlFruitData = '<?xml version="1.0" encoding="UTF-8"?><fruit><name>Banana</name><stock>10</stock></fruit>';
+  const xmlnounData = '<?xml version="1.0" encoding="UTF-8"?><fruit><noun_text>Banana</noun_text><stock>10</stock></fruit>';
   supertest(app)
     .put('/api/fruits/10')
     .set('Content-Type', 'application/xml')
-    .send(xmlFruitData)
+    .send(xmlnounData)
     .expect(415)
     .then(response => {
       t.equal(response.text, 'Invalid payload!', 'Payload must be in JSON format');
@@ -553,11 +532,11 @@ test('test PUT fruit - error - JSON Content-Type and XML body', t => {
   const app = proxyquire('../app', {
     './lib/db': mockDb
   });
-  const xmlFruitData = '<?xml version="1.0" encoding="UTF-8"?><fruit><name>adam</name><stock>10</stock></fruit>';
+  const xmlnounData = '<?xml version="1.0" encoding="UTF-8"?><fruit><noun_text>adam</noun_text><stock>10</stock></fruit>';
   supertest(app)
     .put('/api/fruits/10')
     .set('Content-Type', 'application/json')
-    .send(xmlFruitData)
+    .send(xmlnounData)
     .expect(415)
     .then(response => {
       t.equal(response.text, 'Invalid payload!', 'Payload must be in JSON format');
@@ -566,8 +545,8 @@ test('test PUT fruit - error - JSON Content-Type and XML body', t => {
 });
 
 test('test PUT fruit - error - no numeric stock', t => {
-  const fruitData = {
-    name: 'Banana',
+  const nounData = {
+    noun_text: 'Banana',
     stock: 'two'
   };
 
@@ -577,7 +556,7 @@ test('test PUT fruit - error - no numeric stock', t => {
 
   supertest(app)
     .put('/api/fruits/10')
-    .send(fruitData)
+    .send(nounData)
     .expect(422)
     .then(response => {
       t.equal(response.text, 'The stock must be greater or equal to 0!', 'has a need stock message');
@@ -594,13 +573,13 @@ test('test DELETE fruit', t => {
   };
 
   // Mock the nested require
-  const routesStub = proxyquire('../lib/routes/fruits', {
+  const routesStub = proxyquire('../lib/routes/nouns', {
     '../api/fruits': mockApi
   });
 
   const app = proxyquire('../app', {
     './lib/db': mockDb,
-    './lib/routes/fruits': routesStub
+    './lib/routes/nouns': routesStub
   });
 
   supertest(app)
@@ -619,13 +598,13 @@ test('test DELETE fruit - error - not found', t => {
   };
 
   // Mock the nested require
-  const routesStub = proxyquire('../lib/routes/fruits', {
+  const routesStub = proxyquire('../lib/routes/nouns', {
     '../api/fruits': mockApi
   });
 
   const app = proxyquire('../app', {
     './lib/db': mockDb,
-    './lib/routes/fruits': routesStub
+    './lib/routes/nouns': routesStub
   });
 
   supertest(app)
@@ -645,13 +624,13 @@ test('test DELETE fruit - error', t => {
   };
 
   // Mock the nested require
-  const routesStub = proxyquire('../lib/routes/fruits', {
+  const routesStub = proxyquire('../lib/routes/nouns', {
     '../api/fruits': mockApi
   });
 
   const app = proxyquire('../app', {
     './lib/db': mockDb,
-    './lib/routes/fruits': routesStub
+    './lib/routes/nouns': routesStub
   });
 
   supertest(app)

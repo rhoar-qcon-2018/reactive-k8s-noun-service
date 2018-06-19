@@ -61,21 +61,21 @@ function runTests (route) {
   // POST a fruit
   test('POST /api/fruit/', t => {
     t.plan(4);
-    const fruitData = {
+    const nounData = {
       name: 'Banana',
       stock: '10'
     };
 
     supertest(route)
       .post('/api/fruits')
-      .send(fruitData)
+      .send(nounData)
       .expect(201)
       .expect('Content-Type', /json/)
       .then(response => {
         t.equal(Array.isArray(response.body), false, 'not an array returned');
         t.ok(response.body.id, 'has a new id field');
-        t.equal(response.body.name, fruitData.name, `name is ${fruitData.name}`);
-        t.equal(response.body.stock, fruitData.stock, `stock is ${fruitData.stock}`);
+        t.equal(response.body.name, nounData.name, `name is ${nounData.name}`);
+        t.equal(response.body.stock, nounData.stock, `stock is ${nounData.stock}`);
 
         // Clean up
         supertest(route).delete(`/api/fruits/${response.body.id}`).then(_ => ({}));
@@ -85,11 +85,11 @@ function runTests (route) {
 
   // POST a fruit
   test('POST /api/fruit/ - send non json', t => {
-    const fruitData = '{name: \'Banana\', stock: \'10\'}';
+    const nounData = '{name: \'Banana\', stock: \'10\'}';
 
     supertest(route)
       .post('/api/fruits')
-      .send(fruitData)
+      .send(nounData)
       .expect(422)
       .then(() => {
         t.pass('should fail with 422');
@@ -99,7 +99,7 @@ function runTests (route) {
 
   // PUT a fruit
   test('PUT /api/fruit/:id', t => {
-    const fruitData = {
+    const nounData = {
       name: 'put fruit',
       stock: '10'
     };
@@ -107,7 +107,7 @@ function runTests (route) {
     // First create the new fruit
     supertest(route)
       .post('/api/fruits')
-      .send(fruitData)
+      .send(nounData)
       .expect(201)
       .then(response => {
         const {id} = response.body;

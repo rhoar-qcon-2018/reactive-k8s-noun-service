@@ -27,7 +27,7 @@ const app = express();
 const probe = require('kube-probe');
 const db = require('./lib/db');
 
-const fruits = require('./lib/routes/fruits');
+const fruits = require('./lib/routes/nouns');
 
 app.use(bodyParser.json());
 app.use((error, req, res, next) => {
