@@ -181,7 +181,7 @@ test('test POST noun - error - no noun_text', t => {
     .send(nounData)
     .expect(422)
     .then(response => {
-      t.equal(response.text, 'The noun\'s text is required!', 'has a need noun_text message');
+      t.equal(response.text, 'The text is required!', 'has a need noun_text message');
       t.end();
     });
 });
@@ -438,7 +438,7 @@ test('test PUT noun - error - no payload', t => {
     });
 });
 
-test('test PUT fruit - error - invalid payload', t => {
+test('test PUT noun - error - invalid payload', t => {
   const app = proxyquire('../app', {
     './lib/db': mockDb
   });
@@ -454,7 +454,7 @@ test('test PUT fruit - error - invalid payload', t => {
     });
 });
 
-test('test PUT fruit - error - xml payload', t => {
+test('test PUT noun - error - xml payload', t => {
   const app = proxyquire('../app', {
     './lib/db': mockDb
   });
@@ -470,7 +470,7 @@ test('test PUT fruit - error - xml payload', t => {
     });
 });
 
-test('test PUT fruit - error - JSON Content-Type and XML body', t => {
+test('test PUT noun - error - JSON Content-Type and XML body', t => {
   const app = proxyquire('../app', {
     './lib/db': mockDb
   });
@@ -486,27 +486,7 @@ test('test PUT fruit - error - JSON Content-Type and XML body', t => {
     });
 });
 
-test('test PUT fruit - error - no numeric stock', t => {
-  const nounData = {
-    noun_text: 'Banana',
-    stock: 'two'
-  };
-
-  const app = proxyquire('../app', {
-    './lib/db': mockDb
-  });
-
-  supertest(app)
-    .put('/api/nouns/10')
-    .send(nounData)
-    .expect(422)
-    .then(response => {
-      t.equal(response.text, 'The stock must be greater or equal to 0!', 'has a need stock message');
-      t.end();
-    });
-});
-
-test('test DELETE fruit', t => {
+test('test DELETE noun', t => {
   const mockApi = {
     remove: id => {
       t.equal(id, '1', 'id should be 1 from the request params');
@@ -532,7 +512,7 @@ test('test DELETE fruit', t => {
     });
 });
 
-test('test DELETE fruit - error - not found', t => {
+test('test DELETE noun - error - not found', t => {
   const mockApi = {
     remove: () => {
       return Promise.resolve({rowCount: 0});
