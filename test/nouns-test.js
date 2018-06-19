@@ -186,7 +186,7 @@ test('test POST noun - error - no noun_text', t => {
     });
 });
 
-test('test POST fruit - error - id error', t => {
+test('test POST noun - error - id error', t => {
   const app = proxyquire('../app', {
     './lib/db': mockDb
   });
@@ -238,7 +238,7 @@ test('test POST noun - error - no payload', t => {
   });
 
   supertest(app)
-    .post('/api/noun')
+    .post('/api/nouns')
     .expect(415)
     .then(response => {
       t.equal(response.text, 'Invalid payload!', 'Payload must be set');
@@ -294,57 +294,15 @@ test('test POST fruit - error - JSON Content-Type and XML body', t => {
     });
 });
 
-test('test POST fruit - error - negative number of stock', t => {
+test('test PUT noun', t => {
   const nounData = {
     noun_text: 'Banana',
-    stock: -10
-  };
-
-  const app = proxyquire('../app', {
-    './lib/db': mockDb
-  });
-
-  supertest(app)
-    .post('/api/nouns')
-    .send(nounData)
-    .expect(422)
-    .then(response => {
-      t.equal(response.text, 'The stock must be greater or equal to 0!', 'has a need stock message');
-      t.end();
-    });
-});
-
-test('test POST fruit - error - no numeric stock', t => {
-  const nounData = {
-    noun_text: 'Banana',
-    stock: 'two'
-  };
-
-  const app = proxyquire('../app', {
-    './lib/db': mockDb
-  });
-
-  supertest(app)
-    .post('/api/nouns')
-    .send(nounData)
-    .expect(422)
-    .then(response => {
-      t.equal(response.text, 'The stock must be greater or equal to 0!', 'has a need stock message');
-      t.end();
-    });
-});
-
-test('test PUT fruit', t => {
-  const nounData = {
-    noun_text: 'Banana',
-    stock: 10,
     id: '20'
   };
 
   const mockApi = {
     update: options => {
       t.equal(options.noun_text, nounData.noun_text, `respone.body.noun_text should be ${nounData.noun_text}`);
-      t.equal(options.stock, nounData.stock, `respone.body.stock should be ${nounData.stock}`);
       t.equal(options.id, nounData.id, `respone.body.id should be ${nounData.stock}`);
       return Promise.resolve({rowCount: 1});
     }
