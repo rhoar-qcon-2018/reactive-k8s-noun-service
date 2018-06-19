@@ -327,7 +327,7 @@ test('test PUT noun', t => {
     });
 });
 
-test('test PUT fruit - error - no noun_text', t => {
+test('test PUT noun - error - no noun_text', t => {
   const nounData = {
     stock: 10
   };
@@ -341,34 +341,19 @@ test('test PUT fruit - error - no noun_text', t => {
     .expect(422)
     .send(nounData)
     .then(response => {
-      t.equal(response.text, 'The noun_text is required!', 'has a need noun_text message');
+      t.equal(response.text, 'The text is required!', 'has a need noun_text message');
       t.end();
     });
 });
 
-test('test PUT fruit - error - no stock', t => {
+test('test PUT noun - error - id error', t => {
   const app = proxyquire('../app', {
     './lib/db': mockDb
   });
 
   supertest(app)
     .put('/api/nouns/20')
-    .send({noun_text: 'noun_text'})
-    .expect(422)
-    .then(response => {
-      t.equal(response.text, 'The stock must be greater or equal to 0!', 'has a need stock message');
-      t.end();
-    });
-});
-
-test('test PUT fruit - error - id error', t => {
-  const app = proxyquire('../app', {
-    './lib/db': mockDb
-  });
-
-  supertest(app)
-    .put('/api/nouns/20')
-    .send({noun_text: 'Banana', stock: 10, id: '22'})
+    .send({noun_text: 'Banana', id: '22'})
     .expect(422)
     .then(response => {
       t.equal(response.text, 'Id was invalidly set on request.', 'id error message');
