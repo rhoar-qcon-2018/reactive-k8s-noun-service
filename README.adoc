@@ -1,10 +1,20 @@
-= CRUD - Node.js Booster
+= Noun Service - built from the OpenShift Launch Node.js Booster
 
 IMPORTANT: While you can run and interact with this booster on localhost, it requires that you also have a database installed and configured. This booster runs best when deployed on OpenShift with a PostgreSQL database. For more details on using this booster with a single-node OpenShift cluster, CI/CD deployments, as well as the rest of the runtime, see the link:http://launcher.fabric8.io/docs/nodejs-runtime.html[Node.js Runtime Guide].
 
 IMPORTANT: This booster requires Node.js 8.x or greater and `npm` 5 or greater.
 
+== Running Locally
+NOTE: A PostgreSQL database will need to be running and accepting connections on the standard :5432 IMPORTANT
 
+To use Red Hat's official PostgreSQL container image run the following:
+docker run -d --name postgresql_database -e POSTGRESQL_USER=user -e POSTGRESQL_PASSWORD=pass -e POSTGRESQL_DATABASE=db -p 5432:5432 registry.access.redhat.com/rhscl/postgresql-96-rhel7
+
+You can find more information about this image at the Red Hat Container Catalog:
+https://access.redhat.com/containers/#/registry.access.redhat.com/rhscl/postgresql-96-rhel7
+
+
+$ node .
 
 == Running the Booster on a Single-node OpenShift Cluster
 If you have a single-node OpenShift cluster, such as Minishift or Red Hat Container Development Kit, link:http://launcher.fabric8.io/docs/minishift-installation.html[installed and running], you can also deploy your booster there. A single-node OpenShift cluster provides you with access to a cloud environment that is similar to a production environment.
