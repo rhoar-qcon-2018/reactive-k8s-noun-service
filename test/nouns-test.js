@@ -169,6 +169,7 @@ test('test POST noun', t => {
 
 test('test POST noun - error - no noun_text', t => {
   const nounData = {
+      text: 10
   };
 
   const app = proxyquire('../app', {
@@ -180,7 +181,7 @@ test('test POST noun - error - no noun_text', t => {
     .send(nounData)
     .expect(422)
     .then(response => {
-      t.equal(response.text, 'The noun_text is required!', 'has a need noun_text message');
+      t.equal(response.text, 'The noun\'s text is required!', 'has a need noun_text message');
       t.end();
     });
 });
