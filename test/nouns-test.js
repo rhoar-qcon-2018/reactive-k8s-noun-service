@@ -364,7 +364,6 @@ test('test PUT noun - error - id error', t => {
 test('test PUT fruit - not found', t => {
   const nounData = {
     noun_text: 'Banana',
-    stock: 10,
     id: '20'
   };
 
