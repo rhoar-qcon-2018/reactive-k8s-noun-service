@@ -27,7 +27,7 @@ const app = express();
 const probe = require('kube-probe');
 const db = require('./lib/db');
 
-const fruits = require('./lib/routes/nouns');
+const nouns = require('./lib/routes/nouns');
 
 app.use(bodyParser.json());
 app.use((error, req, res, next) => {
@@ -42,7 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Expose the license.html at http[s]://[host]:[port]/licences/licenses.html
 app.use('/licenses', express.static(path.join(__dirname, 'licenses')));
 
-app.use('/api', fruits);
+app.use('/api', nouns);
 
 // Add a health check
 probe(app);
