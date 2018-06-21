@@ -50,14 +50,12 @@
           //Id is absent so add fruits - POST operation
           method = "POST";
           url = '/api/nouns';
-          data.name = $scope.form.name;
-          data.stock = $scope.form.stock;
+          data.noun_text = $scope.form.name;
         } else {
           //If Id is present, it's edit operation - PUT operation
           method = "PUT";
           url = '/api/nouns/' + $scope.form.id;
-          data.name = $scope.form.name;
-          data.stock = $scope.form.stock;
+          data.noun_text = $scope.form.name;
         }
 
         $http({
