@@ -13,6 +13,11 @@ spec:
              secretKeyRef:
                name: my-database-secret
                key: password
+        - name: MY_DATABASE_SERVICE_HOST
+          valueFrom:
+             secretKeyRef:
+               name: my-database-secret
+               key: host
         readinessProbe:
           httpGet:
             path: /api/health/readiness
