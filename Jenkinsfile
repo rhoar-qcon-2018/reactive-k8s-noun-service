@@ -42,14 +42,6 @@ spec:
         name: '${fromImageStream}'
     type: Source
   successfulBuildsHistoryLimit: 5
-  triggers:
-    - github:
-        secret: ${buildSecret}
-      type: GitHub
-    - generic:
-        secret: ${buildSecret}
-      type: Generic
-    - type: ConfigChange
 """
   openshift.withCluster() {
     openshift.apply(template, "--namespace=${namespace}")
