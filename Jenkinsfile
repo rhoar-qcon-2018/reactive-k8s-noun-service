@@ -201,6 +201,16 @@ stages {
         }
       }
     }
+    stage('SonarQube Quality Gate') {
+      steps {
+        script {
+          def qualitygate = waitForQualityGate()
+          if (qualitygate.status != "OK") {
+            error "Pipeline aborted due to quality gate failure: ${qualitygate.status}"
+          }
+        }
+      }
+    }
     stage('Build Image') {
       steps {
         script {
