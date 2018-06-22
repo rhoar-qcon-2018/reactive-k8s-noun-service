@@ -193,10 +193,6 @@ stages {
       }
     }
     stage('Build Image') {
-      input {
-        message "Debug Jenkins slave?"
-        ok "DONE"
-      }
       steps {
         script {
           openshift.selector('bc', PROJECT_NAME).startBuild("--from-dir=./", '--wait')
