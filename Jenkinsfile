@@ -174,7 +174,7 @@ stages {
             script {
               withSonarQubeEnv('sonar') {
                 sh '''set'''
-                sh '''/opt/sonar-scanner-2.6-SNAPSHOT/bin/sonar-scanner -Dsonar.projectVersion=$(cat package.json | grep '"version"' | awk -F'"' '{print $4}')'''
+                sh '''/opt/sonar-scanner-2.6-SNAPSHOT/bin/sonar-scanner -Dsonar.host.url="${SONAR_HOST_URL} -Dsonar.login=${SONAR_AUTH_TOKEN} -Dsonar.projectVersion=$(cat package.json | grep '"version"' | awk -F'"' '{print $4}')'''
               }
             }
           }
