@@ -202,6 +202,10 @@ stages {
       }
     }
     stage('SonarQube Quality Gate') {
+      input {
+        message "Debug build slave"
+        ok "DONE"
+      }
       steps {
         script {
           def qualitygate = waitForQualityGate()
