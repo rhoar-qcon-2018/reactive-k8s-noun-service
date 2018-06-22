@@ -165,6 +165,10 @@ pipeline {
   }
 stages {
     stage('Compile') {
+        input {
+          message "Debug Jenkins slave?"
+          ok "DONE"
+        }
         steps {
             sh 'npm install'
         }
