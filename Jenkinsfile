@@ -159,6 +159,9 @@ pipeline {
   agent {
     label 'jenkins-slave-npm'
   }
+  options {
+    timeout(time: 30, unit: 'MINUTES')
+  }
   environment {
     PROJECT_NAME = 'noun-service'
     KUBERNETES_NAMESPACE = "${ciProject}"
