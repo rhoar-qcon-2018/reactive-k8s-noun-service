@@ -167,11 +167,6 @@ pipeline {
     KUBERNETES_NAMESPACE = "${ciProject}"
   }
 stages {
-    stage('Compile') {
-        steps {
-            sh 'npm install'
-        }
-    }
     stage('OpenShift Deployments') {
       parallel {
         stage('Create Binary BuildConfig') {
