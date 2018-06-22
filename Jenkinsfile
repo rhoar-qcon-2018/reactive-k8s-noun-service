@@ -173,7 +173,7 @@ stages {
           steps {
             script {
               withSonarQubeEnv('sonar') {
-                sh '''sonar-scanner -Dsonar.projectVersion=$(cat package.json | grep '"version"' | awk -F'"' '{print $4}')'''
+                sh '''/opt/sonar-scanner-2.6/bin/sonar-scanner -Dsonar.projectVersion=$(cat package.json | grep '"version"' | awk -F'"' '{print $4}')'''
               }
             }
           }
@@ -202,10 +202,6 @@ stages {
       }
     }
     stage('SonarQube Quality Gate') {
-      input {
-        message "Debug build slave"
-        ok "DONE"
-      }
       steps {
         script {
           def qualitygate = waitForQualityGate()
