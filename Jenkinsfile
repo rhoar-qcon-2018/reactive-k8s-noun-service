@@ -169,6 +169,15 @@ pipeline {
 stages {
     stage('OpenShift Deployments') {
       parallel {
+        stage('SonarQube Analysis') {
+          steps {
+            script {
+              withSonarQubeEnv('sonar') {
+                sh '''sonar-scanner -Dsonar.projectVersion=$(cat package.json | grep '"version"' | awk -F'"' '{print $4}')'''
+              }
+            }
+          }
+        }
         stage('Create Binary BuildConfig') {
           steps {
             script {
