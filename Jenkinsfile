@@ -102,6 +102,16 @@ items:
             env:
             - name: KUBERNETES_NAMESPACE
               value: ${targetNamespace}
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: database-user
+                  name: insultdb
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-password
+                  name: insultdb
             ports:
               - containerPort: 8080
                 protocol: TCP
