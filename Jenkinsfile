@@ -169,6 +169,16 @@ pipeline {
 stages {
     stage('OpenShift Deployments') {
       parallel {
+        stage('SonarQube Quality Gate') {
+          steps {
+            script {
+              def qualitygate = waitForQualityGate()
+              if (qualitygate.status != "OK") {
+                error "Pipeline aborted due to quality gate failure: ${qualitygate.status}"
+              }
+            }
+          }
+        }
         stage('SonarQube Analysis') {
           steps {
             script {
@@ -198,16 +208,6 @@ stages {
             script {
               deploymentConfig(PROJECT_NAME, ciProject, devProject)
             }
-          }
-        }
-      }
-    }
-    stage('SonarQube Quality Gate') {
-      steps {
-        script {
-          def qualitygate = waitForQualityGate()
-          if (qualitygate.status != "OK") {
-            error "Pipeline aborted due to quality gate failure: ${qualitygate.status}"
           }
         }
       }
