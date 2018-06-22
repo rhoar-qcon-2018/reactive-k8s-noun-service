@@ -42,7 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Expose the license.html at http[s]://[host]:[port]/licences/licenses.html
 app.use('/licenses', express.static(path.join(__dirname, 'licenses')));
 
-app.use('/api', nouns);
+app.use('/api/v1', nouns);
 
 // Add a health check
 probe(app);
