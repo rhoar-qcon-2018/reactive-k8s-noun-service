@@ -74,6 +74,6 @@
     "express": "4.16.0",
     "kube-probe": "^0.3.0",
     "license-reporter": "^1.2.0",
-    "pg": "^7.1.2"
+    "pg": "^7.14.0"
   }
 }
