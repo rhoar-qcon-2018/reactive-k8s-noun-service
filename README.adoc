@@ -7,11 +7,8 @@ IMPORTANT: This booster requires Node.js 8.x or greater and `npm` 5 or greater.
 == Running Locally
 NOTE: A PostgreSQL database will need to be running and accepting connections on the standard :5432 IMPORTANT
 
-To use Red Hat's official PostgreSQL container image run the following:
-docker run -d --name postgresql_database -e POSTGRESQL_USER=user -e POSTGRESQL_PASSWORD=pass -e POSTGRESQL_DATABASE=db -p 5432:5432 registry.access.redhat.com/rhscl/postgresql-96-rhel7
-
-You can find more information about this image at the Red Hat Container Catalog:
-https://access.redhat.com/containers/#/registry.access.redhat.com/rhscl/postgresql-96-rhel7
+Following command uses the CentOS based Postgresql 9.6 image from Docker hub:
+podman run -d --name insultdb -e POSTGRESQL_USER=user -e POSTGRESQL_PASSWORD=pass -e POSTGRESQL_DATABASE=insultdb -p 5432:5432 docker.io/centos/postgresql-96-centos7
 
 
 $ node .
@@ -29,7 +26,7 @@ $ oc new-project MY_PROJECT_NAME
 # Ensure that you use the following values for the user name, password and database name when creating your database application.
 # The pre-configured values are used in the `credentials-secret.yml` and `deployment.yml` files in the `src/main/fabric8` directory of your booster application project.
 
-$ oc new-app -e POSTGRESQL_USER=luke -ePOSTGRESQL_PASSWORD=secret -ePOSTGRESQL_DATABASE=my_data openshift/postgresql-92-centos7 --name=my-database
+$ oc new-app -e POSTGRESQL_USER=user -ePOSTGRESQL_PASSWORD=pass -ePOSTGRESQL_DATABASE=insultdb postgresql:9.6 --name=my-database
 
 # Wait for `my-database` application to be running.
 
@@ -54,28 +51,28 @@ You can use the form at your application's url or you can use the `curl` command
 .List all entries in the database
 [source,bash,options="nowrap",subs="attributes+"]
 ----
-$ curl http://MY_APP_NAME-MY_PROJECT_NAME.LOCAL_OPENSHIFT_HOSTNAME/api/nouns
+$ curl http://MY_APP_NAME-MY_PROJECT_NAME.LOCAL_OPENSHIFT_HOSTNAME/api/v1/nouns
 
 [ {
   "id" : 1,
-  "name" : "Cherry",
+  "noun_text" : "Cherry",
 }, {
   "id" : 2,
-  "name" : "Apple",
+  "noun_text" : "Apple",
 }, {
   "id" : 3,
-  "name" : "Banana",
+  "noun_text" : "Banana",
 } ]
 ----
 
 .Retrieve an entry with a specific ID
 [source,bash,options="nowrap",subs="attributes+"]
 ----
-curl http://MY_APP_NAME-MY_PROJECT_NAME.LOCAL_OPENSHIFT_HOSTNAME/api/nouns/3
+curl http://MY_APP_NAME-MY_PROJECT_NAME.LOCAL_OPENSHIFT_HOSTNAME/api/v1/nouns/3
 
 {
   "id" : 3,
-  "name" : "Banana",
+  "noun_text" : "Banana",
 }
 ----
 
@@ -83,11 +80,11 @@ curl http://MY_APP_NAME-MY_PROJECT_NAME.LOCAL_OPENSHIFT_HOSTNAME/api/nouns/3
 .Create a new entry:
 [source,bash,options="nowrap",subs="attributes+"]
 ----
-curl -H "Content-Type: application/json" -X POST -d '{"name":"pear"}'  http://MY_APP_NAME-MY_PROJECT_NAME.LOCAL_OPENSHIFT_HOSTNAME/api/nouns
+curl -H "Content-Type: application/json" -X POST -d '{"noun_text":"pear"}'  http://MY_APP_NAME-MY_PROJECT_NAME.LOCAL_OPENSHIFT_HOSTNAME/api/v1/nouns
 
 {
   "id" : 4,
-  "name" : "pear",
+  "noun_text" : "pear",
 }
 ----
 
@@ -95,11 +92,11 @@ curl -H "Content-Type: application/json" -X POST -d '{"name":"pear"}'  http://MY
 .Update an Entry
 [source,bash,options="nowrap",subs="attributes+"]
 ----
-curl -H "Content-Type: application/json" -X PUT -d '{"name":"pineapple"}'  http://MY_APP_NAME-MY_PROJECT_NAME.LOCAL_OPENSHIFT_HOSTNAME/api/nouns/1
+curl -H "Content-Type: application/json" -X PUT -d '{"noun_text":"pineapple"}'  http://MY_APP_NAME-MY_PROJECT_NAME.LOCAL_OPENSHIFT_HOSTNAME/api/v1/nouns/1
 
 {
   "id" : 1,
-  "name" : "pineapple",
+  "noun_text" : "pineapple",
 }
 ----
 
@@ -107,7 +104,7 @@ curl -H "Content-Type: application/json" -X PUT -d '{"name":"pineapple"}'  http:
 .Delete an Entry:
 [source,bash,options="nowrap",subs="attributes+"]
 ----
-curl -X DELETE http://MY_APP_NAME-MY_PROJECT_NAME.LOCAL_OPENSHIFT_HOSTNAME/api/nouns/1
+curl -X DELETE http://MY_APP_NAME-MY_PROJECT_NAME.LOCAL_OPENSHIFT_HOSTNAME/api/v1/nouns/1
 ----
 
 NOTE: If you receive an HTTP Error code `503` as a response after executing these commands, it means that the application is not ready yet.

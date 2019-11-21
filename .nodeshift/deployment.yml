@@ -13,7 +13,7 @@ spec:
              secretKeyRef:
                name: my-database-secret
                key: password
-        - name: MY_DATABASE_SERVICE_HOST
+        - name: DB_HOST
           valueFrom:
              secretKeyRef:
                name: my-database-secret
